@@ -11,7 +11,7 @@ const routes: Array<RouteConfig> = [
     component: HomeView
   },
   {
-    path: '/transaction-details/:id',
+    path: '/transaction-details',
     name: 'TransactionDetails',
     component: () => import('@/views/TransactionDetails.vue')
   }

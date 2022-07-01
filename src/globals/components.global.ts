@@ -6,6 +6,8 @@ Vue.component('navbar', navbar);
 import footer from '@/components/shared/footer/footer.vue';
 Vue.component('footer-component', footer);
 
-//Transaction Component
-//import transactionComponent from '@/components/Transactions.vue';
-//Vue.component('transaction-component', transactionComponent);
+//Transaction Components
+import transactionComponent from '@/components/TransactionComponent.vue';
+Vue.component('transaction-component', transactionComponent);
+import transactionForm from '@/components/TransactionForm.vue';
+Vue.component('transaction-form', transactionForm);

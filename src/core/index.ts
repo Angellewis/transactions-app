@@ -5,14 +5,14 @@ export default class BaseVue extends Vue {
   constructor() {
     super();
   }
-  operationSuccess(message: string = "Operación exitosa!", duration = 2000) {
+  operationSuccess(message: string = "Successful operation!", duration = 2000) {
     this.$buefy.toast.open({
       message: message,
       type: "is-success",
       duration: duration,
     });
   }
-  operationFailed(message: string = "Operación fallida!", duration = 4000) {
+  operationFailed(message: string = "Operation failed!", duration = 4000) {
     this.$buefy.toast.open({
       message: message,
       type: "is-danger",
