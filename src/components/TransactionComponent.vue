@@ -2,21 +2,33 @@
   <div class="main-container">
     <b-loading :is-full-page="true" v-model="isLoading"></b-loading>
     <div class="top-content-container">
-      <b-field>
-        <b-input placeholder="Search..." type="search" icon="magnify">
-        </b-input>
-        <p class="control">
-          <b-button type="is-primary" label="Search" />
-        </p>
-      </b-field>
-      <b-button type="is-success is-light" @click="isTransactionFormOpen = true"
-        >Create transaction</b-button
-      >
+      <div class="top-content-container">
+        <b-field>
+          <span class="error" v-if="isSpecialCharacter">Please remove all special characters</span>
+          <b-input
+            placeholder="Search..."
+            type="search"
+            v-model="inputSearch"
+            icon="magnify"
+          >
+          </b-input>
+        </b-field>
+        <b-button style="margin-left: 10px" @click="sortList()"
+          >Order List</b-button
+        >
+      </div>
+      <div>
+        <b-button
+          type="is-success is-light"
+          @click="isTransactionFormOpen = true"
+          >Create transaction</b-button
+        >
+      </div>
     </div>
     <div class="transactions-container">
       <div
         class="card card-box"
-        v-for="transaction in transactionsList"
+        v-for="transaction in filteredList()"
         :key="transaction.id"
       >
         <div class="card-content" @click="ViewTransaction(transaction)">
@@ -29,6 +41,9 @@
             >Delete</a
           >
         </footer>
+      </div>
+      <div class="card error" v-if="inputSearch && !filteredList().length">
+        No results found!
       </div>
     </div>
     <b-modal
@@ -43,22 +58,20 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Watch } from "vue-property-decorator";
 import TransactionService from "@/services/transaction.service";
 import BaseVue from "@/core";
 import { Transaction } from "@/models/base/transaction.model";
-import { AxiosError } from "axios";
 
 @Component
 export default class TransactionComponent extends BaseVue {
   transactionService: TransactionService = new TransactionService();
   isLoading: boolean = false;
+  isSorted: boolean = false;
   isTransactionFormOpen: boolean = false;
+  isSpecialCharacter: boolean = false;
   transactionsList: Transaction[] = [];
-  formProps: {} = {
-    email: "evan@you.com",
-    password: "testing",
-  };
+  inputSearch: string = "";
 
   constructor() {
     super();
@@ -66,6 +79,34 @@ export default class TransactionComponent extends BaseVue {
 
   async mounted() {
     this.transactionsList = await this.GetTransactions();
+  }
+
+  filteredList() {
+    return this.transactionsList.filter((transaction) =>
+      transaction.concept.toLowerCase().includes(this.inputSearch.toLowerCase())
+    );
+  }
+
+  sortList() {
+    this.isSorted = !this.isSorted;
+    if (this.isSorted) {
+      this.transactionsList = this.filteredList().sort((a, b) =>
+        a.concept.localeCompare(b.concept)
+      );
+    } else {
+      this.transactionsList = this.filteredList().sort((a, b) =>
+        b.concept.localeCompare(a.concept)
+      );
+    }
+  }
+
+  @Watch("inputSearch")
+  searchSpecialCharacters(val: string) {
+    if (/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(val)) {
+      this.isSpecialCharacter = true;
+    } else {
+      this.isSpecialCharacter = false;
+    }
   }
 
   ViewTransaction(transaction: Transaction | null) {
@@ -137,5 +178,9 @@ export default class TransactionComponent extends BaseVue {
 .top-content-container {
   display: flex;
   justify-content: space-between;
+}
+
+.error {
+  background-color: tomato;
 }
 </style>

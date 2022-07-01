@@ -63,12 +63,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
+import { Component} from "vue-property-decorator";
 import AccountService from "@/services/account.service";
 import BaseVue from "@/core";
 import { Transaction } from "@/models/base/transaction.model";
 import { Account } from "@/models/base/account.model";
-import { AxiosError } from "axios";
 import TransactionService from "@/services/transaction.service";
 import Helpers from "@/core/helpers";
 

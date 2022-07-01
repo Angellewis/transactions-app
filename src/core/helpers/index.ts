@@ -9,4 +9,9 @@ export default class Helpers {
         (dd > 9 ? '' : '0') + dd
         ].join('-');
     }
+    static ConvertStringToDate(date: Date, days: number) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
 }
